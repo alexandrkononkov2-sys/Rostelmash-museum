@@ -1,0 +1,532 @@
+/* =========================================
+   1. ОБЩИЕ СТИЛИ И ШАПКА
+   ========================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #1a2128;
+  --accent: #c59b4c;
+  --text: #e8e6e3;
+  --muted: #b0b5ba;
+  --red: #a21414;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Зернистость */
+/* body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+} */
+
+/* Шапка */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 24px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(26, 33, 40, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(197, 155, 76, 0.15);
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Geologica";
+  font-weight: 900;
+  font-size: 24px;
+  color: var(--accent);
+  transform: rotate(-8deg);
+  transition: 0.3s;
+}
+.logo:hover .logo-icon {
+  transform: rotate(0);
+  background: var(--accent);
+  color: var(--bg);
+  color: rgb(218, 208, 208);
+  background-color: #d0043c;
+}
+.logo-text {
+  font-family: "Geologica";
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--text);
+  line-height: 1.1;
+}
+.logo-text span {
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 2.5px;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+/* Навигация */
+.nav {
+  display: flex;
+  gap: 40px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.nav a {
+  color: var(--muted);
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 6px;
+  transition: 0.2s;
+  letter-spacing: 0.5px;
+}
+.nav a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--accent);
+  transition: 0.3s;
+}
+.nav a:hover {
+  color: #fff;
+}
+.nav a:hover::after {
+  width: 100%;
+}
+.nav a.active {
+  color: #fff;
+}
+.nav a.active::after {
+  width: 100%;
+}
+
+/* Кнопки */
+.btn {
+  display: inline-block;
+  padding: 16px 42px;
+  background: var(--red);
+  color: #fff;
+  text-decoration: none;
+  font-family: "Geologica";
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  /* box-shadow: 6px 6px 0 rgba(197, 155, 76, 0.2); - Это тени, для стиля */
+}
+.btn:hover {
+  background: #d0043c;
+  transform: translate(-3px, -3px);
+  /* box-shadow: 10px 10px 0 rgba(197, 155, 76, 0.3); - Это тени кнопок после наведения*/
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--accent);
+  box-shadow: none;
+  color: var(--accent);
+}
+.btn-ghost:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Заголовки секций */
+.section-kicker {
+  font-family: "Geologica";
+  font-size: 12px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-kicker::before {
+  content: "";
+  width: 40px;
+  height: 2px;
+  background: var(--accent);
+}
+.section-title {
+  font-family: "Geologica";
+  font-weight: 900;
+  font-size: clamp(32px, 5vw, 64px);
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+.section-title em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+/* Подвал */
+.footer {
+  padding: 50px 50px 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13px;
+  color: #7a848d;
+  text-align: center;
+}
+.footer a {
+  color: var(--muted);
+  text-decoration: none;
+  margin-right: 24px;
+  transition: 0.2s;
+}
+.footer a:hover {
+  color: var(--accent);
+}
+
+/* =========================================
+   2. СТИЛИ ГЛАВНОЙ СТРАНИЦЫ (index.html)
+   ========================================= */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 140px 50px 80px;
+  position: relative;
+  overflow: hidden;
+
+  background-color: #1a2128;
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(26, 33, 40, 0.95) 0%,
+      rgba(26, 33, 40, 0.7) 50%,
+      rgba(26, 33, 40, 0.95) 100%
+    ),
+    url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfhZYP_bgVf7OPrIiD2_qBFwTcuOa5ESEbJ6S7MCW8jA&s=10");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-content {
+  max-width: 700px;
+  position: relative;
+  z-index: 2;
+}
+.hero h1 {
+  font-family: "Geologica", sans-serif;
+  font-weight: 800;
+  font-size: clamp(46px, 7.5vw, 96px);
+  line-height: 0.98;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 28px;
+  letter-spacing: -2.5px;
+}
+.hero h1 em {
+  color: var(--accent);
+  font-style: normal;
+  background: linear-gradient(to right, #c59b4c, #e8c86a);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 540px;
+  margin-bottom: 44px;
+}
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.hero-content > * {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.8s ease forwards;
+}
+.hero-content > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.hero-content > *:nth-child(2) {
+  animation-delay: 0.25s;
+}
+.hero-content > *:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.hero-content > *:nth-child(4) {
+  animation-delay: 0.55s;
+}
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Сетка карточек */
+.cards-section {
+  padding: 110px 50px 130px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 60px;
+}
+
+.nav-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid var(--accent);
+  padding: 40px 34px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.35s ease;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.nav-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  background: linear-gradient(to bottom, var(--accent), #e8c86a);
+  transition: height 0.4s ease;
+}
+.nav-card:hover::before {
+  height: 100%;
+}
+.nav-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-6px);
+  border-left-color: transparent;
+}
+
+.nav-card .num {
+  font-family: "Geologica", sans-serif;
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: 4px;
+  margin-bottom: 6px;
+}
+.nav-card h3 {
+  font-family: "Geologica", sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: #fff;
+  margin: 14px 0 14px;
+  line-height: 1.2;
+}
+.nav-card p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.nav-card .arrow {
+  display: inline-block;
+  margin-top: 22px;
+  color: var(--accent);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: transform 0.3s;
+}
+.nav-card:hover .arrow {
+  transform: translateX(6px);
+}
+
+/* Цитата и CTA */
+.quote-section {
+  padding: 100px 50px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.15);
+}
+.quote-section blockquote {
+  font-family: "Geologica", sans-serif;
+  font-weight: 700;
+  font-size: clamp(22px, 3vw, 36px);
+  line-height: 1.4;
+  color: #fff;
+  max-width: 820px;
+  margin: 0 auto 24px;
+}
+.quote-section blockquote em {
+  color: var(--accent);
+  font-style: normal;
+}
+.quote-section cite {
+  font-style: normal;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.cta {
+  text-align: center;
+  padding: 120px 50px;
+}
+.cta h2 {
+  font-family: "Geologica", sans-serif;
+  font-weight: 900;
+  font-size: clamp(30px, 5vw, 58px);
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 24px;
+  letter-spacing: -1px;
+}
+.cta p {
+  color: var(--muted);
+  font-size: 17px;
+  max-width: 520px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+}
+
+/* Адаптив */
+@media (max-width: 900px) {
+  .header {
+    padding: 16px 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .nav {
+    gap: 16px;
+    font-size: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+  .logo-text {
+    font-size: 16px;
+  }
+  .hero {
+    padding: 150px 20px 60px;
+    min-height: auto;
+  }
+  .cards-section {
+    padding: 70px 20px 80px;
+  }
+  .quote-section {
+    padding: 70px 20px;
+  }
+  .cta {
+    padding: 80px 20px;
+  }
+  .footer {
+    padding: 30px 20px;
+  }
+}
+/* =========================================
+   3. БЛОК О ПРОЕКТЕ (Информация и цифры)
+   ========================================= */
+.info-section {
+  padding: 100px 50px;
+  background: rgba(0, 0, 0, 0.15); /* Легкое затемнение */
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.info-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Две колонки: текст и цифры */
+  gap: 60px;
+  align-items: center;
+}
+
+.info-text p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+/* Сетка для карточек с цифрами */
+.info-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* gap: 16px; */
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(209, 163, 76, 0.1);
+  padding: 30px 15px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+/* .stat-card:hover { */
+/* background: rgba(197, 155, 76, 0.1); Легкий золотой фон при наведении */
+/* border-color: var(--accent); */
+/* } */
+
+.stat-number {
+  font-family: "Geologica", sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}

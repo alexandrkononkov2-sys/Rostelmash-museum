@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Хронология Ростсельмаш</title>
+
+    <!-- Шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geologica:wght@700;900&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Общий CSS (шапка, подвал, кнопки) -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Стили только для ленты времени -->
+    <style>
+      /* ===== ИНТРО ===== */
+      .intro {
+        min-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 160px 20px 60px;
+      }
+      .intro h1 {
+        font-family: "Geologica", sans-serif;
+        font-weight: 900;
+        font-size: clamp(40px, 6vw, 80px);
+        line-height: 1.1;
+        text-transform: uppercase;
+        color: #fff;
+        margin-bottom: 24px;
+        letter-spacing: -1.5px;
+      }
+      .intro h1 em {
+        color: var(--accent);
+        font-style: normal;
+      }
+      .intro p {
+        max-width: 540px;
+        font-size: 18px;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      /* Подсказка "скролль вниз" */
+      .scroll-hint {
+        margin-top: 50px;
+        font-size: 12px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #7a848d;
+        /* animation: bounce 2s infinite; */
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(8px);
+        }
+      }
+
+      /* ===== ЛЕНТА ВРЕМЕНИ ===== */
+      .timeline {
+        position: relative;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 40px 140px;
+      }
+
+      /* Центральная линия */
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateX(-50%);
+      }
+
+      /* Линия прогресса (заполняется золотым при скролле) */
+      /* .progress-line {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 2px;
+        background: var(--accent);
+        transform: translateX(-50%);
+        height: 0;
+        transition: background 0.8s ease;
+        z-index: 1;
+        box-shadow: 0 0 20px var(--accent);
+      } */
+
+      /* Блок одной эпохи */
+      .era {
+        position: relative;
+        padding: 60px 0;
+      }
+      .era-inner {
+        position: relative;
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+      }
+
+      /* Чередование: нечетные слева, четные справа */
+      .era:nth-child(odd) .era-inner {
+        flex-direction: row-reverse;
+      }
+
+      /* Карточка с текстом */
+      .card {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-left: 3px solid var(--accent);
+        padding: 36px 40px;
+        transition: all 0.4s ease;
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      .card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .card:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateY(-4px);
+      }
+
+      .card .tag {
+        display: inline-block;
+        font-family: "Geologica", sans-serif;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .card h2 {
+        font-family: "Geologica", sans-serif;
+        font-weight: 700;
+        font-size: 26px;
+        color: #fff;
+        margin-bottom: 12px;
+        line-height: 1.2;
+      }
+      .card h2 em {
+        color: var(--accent);
+        font-style: normal;
+      }
+      .card p {
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .card .stat {
+        display: inline-flex;
+        gap: 8px;
+        align-items: baseline;
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        font-family: "Geologica", sans-serif;
+        font-weight: 700;
+        font-size: 24px;
+        color: #fff;
+      }
+      .card .stat small {
+        font-size: 12px;
+        font-weight: 400;
+        color: #7a848d;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      /* Штамп года */
+      .year {
+        flex: 0 0 160px;
+        text-align: center;
+        padding-top: 20px;
+        font-family: "Geologica", sans-serif;
+        font-weight: 900;
+        font-size: 56px;
+        line-height: 1;
+        color: var(--accent);
+        transition: color 0.8s ease;
+        position: relative;
+        z-index: 2;
+      }
+      .year::after {
+        content: "";
+        position: absolute;
+        /* left: 50%;
+        top: 80px;
+        width: 14px;
+        height: 14px;
+        background: var(--accent);
+        border-radius: 50%;
+        transform: translateX(-50%);
+        box-shadow:
+          0 0 0 6px #1a2128,
+          0 0 30px var(--accent); */
+        transition: all 0.8s ease;
+      }
+      .year small {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 3px;
+        color: #7a848d;
+        margin-top: 12px;
+        font-weight: 400;
+        font-family: "Inter", sans-serif;
+        text-transform: uppercase;
+      }
+
+      /* ===== ФИНАЛЬНЫЙ БЛОК ===== */
+      .outro {
+        text-align: center;
+        padding: 120px 20px 160px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .outro h2 {
+        font-family: "Geologica", sans-serif;
+        font-weight: 900;
+        font-size: clamp(30px, 5vw, 60px);
+        color: #fff;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+      .outro p {
+        color: var(--muted);
+        font-size: 18px;
+        max-width: 520px;
+        margin: 0 auto 40px;
+        line-height: 1.7;
+      }
+
+      /* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
+      @media (max-width: 900px) {
+        .timeline::before,
+        .progress-line {
+          left: 20px;
+        }
+        .era-inner,
+        .era:nth-child(odd) .era-inner {
+          flex-direction: column;
+          padding-left: 60px;
+        }
+        .year {
+          font-size: 36px;
+          flex: none;
+          text-align: left;
+        }
+        .year::after {
+          left: -46px;
+          top: 18px;
+        }
+        .card {
+          padding: 28px 24px;
+        }
+        .intro h1 {
+          letter-spacing: -1px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ШАПКА (активен пункт "Хронология") -->
+    <header class="header">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">Р</div>
+        <div class="logo-text">
+          РОСТСЕЛЬМАШ
+          <span>Хроника индустрии</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Главная</a>
+        <a href="timeline.html" class="active">Хронология</a>
+        <a href="tour.html">Экскурсия</a>
+        <a href="voices.html">История в лицах</a>
+        <a href="archive.html">Фотолетопись</a>
+      </nav>
+    </header>
+
+    <!-- ИНТРО -->
+    <section class="intro">
+      <div class="section-kicker" style="justify-content: center">
+        90 лет истории
+      </div>
+      <h1>Хронология</h1>
+      <p>
+        От первых «Сталинцев» до TORUM. Здесь ты увидишь, как менялась страна,
+        завод и комбайны и через какие трудности им пришлось пройти.
+      </p>
+      <div class="scroll-hint">Листай вниз</div>
+    </section>
+
+    <!-- ЛЕНТА -->
+    <div class="timeline" id="timeline">
+      <div class="progress-line" id="progressLine"></div>
+
+      <!-- 1930 -->
+      <section class="era" data-bg="#2c241b" data-accent="#C59B4C">
+        <div class="era-inner">
+          <div class="year">1930<small>Основание</small></div>
+          <div class="card">
+            <span class="tag">Эпоха 1</span>
+            <h2>Первый <em>«Сталинец-1»</em></h2>
+            <p>
+              В ноябре 1930 года с конвейера «Ростсельмаша» сходит первый
+              комбайн. 16-сильный мотор, деревянный бункер — но именно он начал
+              эпоху механизации полей. 14 июня 1940 года с конвейера сошел
+              50-тысячный экземпляр.
+            </p>
+            <div class="stat">30 000 <small>га уборки за сезон</small></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1941 -->
+      <section class="era" data-bg="#2a1e1e" data-accent="#8B1E1E">
+        <div class="era-inner">
+          <div class="year">1941<small>Война</small></div>
+          <div class="card">
+            <span class="tag">Эпоха 2</span>
+            <h2>Завод уходит <em>на Восток</em></h2>
+            <p>
+              13 октября 1941 года начался демонтаж оборудования, а завод
+              эвакуируют в Ташкент. В годы войны «Ростсельмаш» производит
+              боеприпасы и ремонтирует танки. Комбайны вернутся только после
+              Победы.
+            </p>
+            <div class="stat">4 года <small>без мирной продукции</small></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1956 -->
+      <section class="era" data-bg="#242830" data-accent="#9EA7B0">
+        <div class="era-inner">
+          <div class="year">1956<small>Возрождение</small></div>
+          <div class="card">
+            <span class="tag">Эпоха 3</span>
+            <h2>«Сталинец-6» — <em>покоритель целины</em></h2>
+            <p>
+              Ростсельмаш ведет подготовку к выпуску новой уборочной машины -
+              «Сталинец 6». Комбайн отправляется на целину Казахстана и Сибири.
+              Именно он стал символом освоения новых земель и технической мощи
+              страны.
+            </p>
+            <div class="stat">100 000+ <small>машин выпущено</small></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1969 -->
+      <section class="era" data-bg="#2b2618" data-accent="#E8C86A">
+        <div class="era-inner">
+          <div class="year">1969<small>Расцвет</small></div>
+          <div class="card">
+            <span class="tag">Эпоха 4</span>
+            <h2><em>«СК-3»</em> — комбайн-легенда</h2>
+            <p>
+              Самая массовая модель в истории СССР. Простой, надёжный,
+              ремонтопригодный. Работал в каждом колхозе и стал героем множества
+              плакатов и фильмов. Всего было выпущено более 258 тысяч таких
+              машин.
+            </p>
+            <div class="stat">258 891 <small>штук выпущено</small></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1986 -->
+      <section class="era" data-bg="#2e2418" data-accent="#E07A2F">
+        <div class="era-inner">
+          <div class="year">1986<small>Технологии</small></div>
+          <div class="card">
+            <span class="tag">Эпоха 5</span>
+            <h2>«Дон-1500» — <em>прыжок в будущее</em></h2>
+            <p>
+              Советский и российский самоходный зерноуборочный комбайн третьего
+              поколения. Он разменял скорость и комфорт на старую простоту и
+              стал знаком технического прорыва.
+            </p>
+            <div class="stat">2 модели <small>в одном семействе</small></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1993 -->
+      <section class="era" data-bg="#151c28" data-accent="#4A7C8C">
+        <div class="era-inner">
+          <div class="year">1993<small>Испытание</small></div>
+          <div class="card">
+            <span class="tag">Эпоха 6</span>
+            <h2>Выжить <em>в новой стране</em></h2>
+            <p>
+              Развал СССР, разрыв связей, падение спроса. Завод работает на
+              грани. В этот же период начинается преобразование государственного
+              предприятия в акционерное общество открытого типа, собственником
+              которого стал коллектив Ростсельмаш. Именно тогда рождается идея
+              объединения с другими предприятиями в союз «Ростсельмаш» — чтобы
+              выжить вместе.
+            </p>
+            <div class="stat">-90% <small>производства к 1995</small></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2003 -->
+      <section class="era" data-bg="#1b2630" data-accent="#7A9BB0">
+        <div class="era-inner">
+          <div class="year">2003<small>Возвращение</small></div>
+          <div class="card">
+            <span class="tag">Эпоха 7</span>
+            <h2><em>ACROS</em> — новая эра</h2>
+            <p>
+              В 2003 г. Ростсельмаш открывает представительство в Казахстане, с
+              последующим разворачиванием локальной производственной площадки.
+              Появляется первая принципиально новая модель комбайнов после
+              перестройки. С ACROS начинается модернизация всей линейки.
+            </p>
+            <div class="stat">30 <small>модификаций</small></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2020 -->
+      <section class="era" data-bg="#161b20" data-accent="#E0E0E0">
+        <div class="era-inner">
+          <div class="year">2020<small>Сегодня</small></div>
+          <div class="card">
+            <span class="tag">Эпоха 8</span>
+            <h2><em>TORUM</em> — цифровой комбайн</h2>
+            <p>
+              Высокотехнологичная машина с автопилотом, телеметрией и точным
+              земледелием. Он не просто убирает хлеб — он собирает данные. 8
+              августа 2022 года в Орловской области самый мощный зерноуборочный
+              комбайн страны – TORUM 785 компании. Сегодня «Ростсельмаш» —
+              крупнейший производитель комбайнов в России.
+            </p>
+            <div class="stat">15+ моделей <small>в линейке сейчас</small></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ФИНАЛ -->
+    <section class="outro">
+      <h2>
+        Далее —
+        <em style="color: var(--accent); font-style: normal"
+          >история в кадрах</em
+        >
+      </h2>
+      <p>
+        Переходи в Фотолетопись. Открой визуальный архив и посмотри на историю
+        завода своими глазами: от черно-белых кадров прошлого до современных
+        машин в работе.
+      </p>
+      <a href="archive.html" class="btn">Открыть Фотолетопись</a>
+    </section>
+
+    <!-- ПОДВАЛ (единый) -->
+    <footer class="footer">
+      <div>© 2026 Цифровой музей «Ростсельмаш»</div>
+      <div>
+        <a href="index.html">Главная</a>
+        <a href="timeline.html">Хронология</a>
+        <a href="archive.html">Фотолетопись</a>
+      </div>
+    </footer>
+
+    <!-- СКРИПТЫ ДЛЯ ЛЕНТЫ -->
+    <script>
+      // 1. Появление карточек и смена цветов
+      const eras = document.querySelectorAll(".era");
+      const root = document.documentElement;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              // Карточка появляется
+              entry.target.querySelector(".card").classList.add("visible");
+
+              // Меняем цвета всей страницы
+              const era = entry.target;
+              const bg = era.dataset.bg;
+              const accent = era.dataset.accent;
+
+              document.body.style.backgroundColor = bg;
+              root.style.setProperty("--accent", accent);
+
+              // Красим прогресс-линию
+              document.getElementById("progressLine").style.background = accent;
+            }
+          });
+        },
+        { threshold: 0.4 },
+      );
+
+      eras.forEach((era) => observer.observe(era));
+
+      // 2. Заполнение прогресс-линии при скролле
+      window.addEventListener("scroll", () => {
+        const tl = document.getElementById("timeline");
+        const rect = tl.getBoundingClientRect();
+        const total = tl.offsetHeight - window.innerHeight * 0.5;
+        const scrolled = Math.min(
+          Math.max(-rect.top + window.innerHeight * 0.4, 0),
+          total,
+        );
+        const percent = (scrolled / total) * 100;
+        document.getElementById("progressLine").style.height = percent + "%";
+      });
+    </script>
+  </body>
+</html>

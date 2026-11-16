@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>История в лицах Ростсельмаш</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geologica:wght@700;900&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .page {
+        padding: 140px 50px 80px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-top: 50px;
+      }
+
+      .person-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 30px;
+        transition: 0.3s;
+        position: relative;
+      }
+      .person-card:hover {
+        border-color: var(--accent);
+        background: rgba(197, 155, 76, 0.05);
+      }
+
+      .person-role {
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 10px;
+      }
+      .person-name {
+        font-family: "Geologica";
+        font-size: 24px;
+        color: #fff;
+        margin-bottom: 20px;
+      }
+      .person-quote {
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--muted);
+        font-style: italic;
+        padding-left: 16px;
+        border-left: 2px solid var(--accent);
+      }
+
+      .person-audio {
+        margin-top: 25px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        opacity: 0.5;
+      }
+      .play-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        font-size: 12px;
+        padding-left: 2px;
+      }
+      .person-audio span {
+        font-size: 12px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html" class="logo"
+        ><div class="logo-icon">Р</div>
+        <div class="logo-text">
+          РОСТСЕЛЬМАШ<span>Хроника индустрии</span>
+        </div></a
+      >
+      <nav class="nav">
+        <a href="index.html">Главная</a>
+        <a href="timeline.html">Хронология</a>
+        <a href="tour.html">Экскурсия</a>
+        <a href="voices.html" class="active">История в лицах</a>
+        <a href="archive.html">Фотолетопись</a>
+      </nav>
+    </header>
+
+    <section class="page">
+      <div class="section-kicker">Люди завода</div>
+      <h1 class="section-title">История в <em>лицах</em></h1>
+      <p style="color: var(--muted); font-size: 17px; max-width: 600px">
+        За каждым легендарным комбайном стоят не только чертежи, но и судьбы
+        людей. Здесь собраны ветераны, стоявшие у истоков производства, молодые
+        инженеры — их ежедневный труд, опыт и преданность делу навсегда вписаны
+        в летопись «Ростсельмаша».
+      </p>
+      <div class="grid">
+        <div class="person-card">
+          <div class="person-role">
+            Ветеран ВОВ и труда литейный цех 47 лет стажа
+          </div>
+          <div class="person-name">Зоя Никифоровна Конкилова</div>
+          <div class="person-quote">
+            «Я больше нигде не работала, кроме „Ростсельмаша“. Он мне как родной
+            дом. Была б молодая, я б опять пошла туда работать, если б я была
+            моложе».
+          </div>
+        </div>
+
+        <div class="person-card">
+          <div class="person-role">
+            Герой Социалистического Труда строгальщик работал с 1931 года
+          </div>
+          <div class="person-name">Пётр Кондратьевич Колесников</div>
+          <div class="person-quote">
+            «Я прожил долгую жизнь. На своем веку занимал немало важных и
+            ответственных постов... Но самой высокой своей должностью считал и
+            считаю почётное звание рабочего».
+          </div>
+        </div>
+
+        <div class="person-card">
+          <div class="person-role">
+            Генеральный директор «Ростсельмаша» в 1978–1996 гг.
+          </div>
+          <div class="person-name">Юрий Александрович Песков</div>
+          <div class="person-quote">
+            «Одно из самых ценных для меня воспоминаний: 1995 г., приехал на
+            уборочную, вдруг ко мне подходит комбайнёр и говорит: „Спасибо хотел
+            сказать за то, что комбайн сделали для человека, а не для быдла“».
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="person-role">Фрезеровщик 35 лет стажа</div>
+          <div class="person-name">Светлана Шкирич</div>
+          <div class="person-quote">
+            «Конечно, и в одиночку можно стать профессионалом, но лучше когда на
+            начальном этапе рядом находится опытный коллега. Когда-то нас
+            обучали, теперь мы помогаем новичкам осваиваться».
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="person-role">
+            Ведущий инженер-технолог «Лучший инженер Дона»
+          </div>
+          <div class="person-name">Вячеслав Радченко</div>
+          <div class="person-quote">
+            «У меня работала бабушка моя... И дед мой перед войной тоже работал
+            на заводе Ростсельмаш. Вот там, где ему выделили землю, он построил
+            дом, там я сейчас живу».
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="person-role">
+            Ведущий конструктор научно-технического центра
+          </div>
+          <div class="person-name">Александр Молодушкин</div>
+          <div class="person-quote">
+            «У меня отец работал здесь на заводе, он больше 40 лет проработал и
+            занесен в почетную книгу завода. И у меня мать здесь работала. Я
+            здесь нашел жену, женился. Два сына моих здесь тоже немного
+            поработали. Так что у меня с заводом связана вся жизнь».
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>© 2026 Цифровой музей «Ростсельмаш»</div>
+      <div>
+        <a href="index.html">Главная</a><a href="tour.html">Экскурсия</a>
+      </div>
+    </footer>
+  </body>
+</html>

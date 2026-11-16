@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Экскурсия по цехам Ростсельмаш</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geologica:wght@700;900&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .tour-container {
+        max-width: 1200px;
+        margin: 140px auto 80px;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 40px;
+      }
+      .tour-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .tour-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-left: 3px solid transparent;
+        padding: 16px 20px;
+        color: var(--muted);
+        font-family: "Geologica";
+        font-size: 16px;
+        text-align: left;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .tour-btn:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .tour-btn.active {
+        border-left-color: var(--accent);
+        color: #fff;
+        background: rgba(197, 155, 76, 0.1);
+      }
+
+      .tour-content {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-top: 3px solid var(--accent);
+      }
+      .tour-pane {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+      .tour-pane.active {
+        display: block;
+      }
+      .tour-pane h3 {
+        font-family: "Geologica";
+        font-size: 26px;
+        color: #fff;
+        margin-bottom: 16px;
+      }
+      .tour-pane p {
+        color: var(--muted);
+        line-height: 1.8;
+        margin-bottom: 20px;
+        font-size: 15px;
+      }
+
+      /* Стилизация блока под фото */
+      .tour-img {
+        width: 100%;
+        height: 250px;
+        background: #2f3a46;
+        border: 1px dashed var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .tour-photo {
+        width: 100%;
+        height: 250px;
+        object-fit: cover; /* Картинка заполнит блок, не искажая пропорции */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: block;
+      }
+      /* Делаем курсор в виде лупы при наведении на фото */
+      .tour-photo {
+        cursor: zoom-in;
+        transition: opacity 0.3s;
+      }
+      .tour-photo:hover {
+        opacity: 0.8;
+      }
+
+      /* Стили для полноэкранного окна */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        padding-top: 50px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(10, 14, 18, 0.95); /* Темный фон */
+        backdrop-filter: blur(5px); /* Размытие заднего фона */
+      }
+
+      .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%; /* Картинка занимает 90% ширины экрана */
+        max-height: 85vh; /* Но не больше 85% высоты */
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        animation: zoomIn 0.3s ease;
+      }
+
+      /* Крестик для закрытия */
+      .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 40px;
+        color: #fff;
+        font-size: 45px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        z-index: 10000;
+      }
+      .close-modal:hover {
+        color: var(--accent);
+      }
+
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 800px) {
+        .tour-container {
+          grid-template-columns: 1fr;
+          margin-top: 100px;
+        }
+        .tour-img {
+          height: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html" class="logo"
+        ><div class="logo-icon">Р</div>
+        <div class="logo-text">
+          РОСТСЕЛЬМАШ<span>Хроника индустрии</span>
+        </div></a
+      >
+      <nav class="nav">
+        <a href="index.html">Главная</a>
+        <a href="timeline.html">Хронология</a>
+        <a href="tour.html" class="active">Экскурсия</a>
+        <a href="voices.html">История в лицах</a>
+        <a href="archive.html">Фотолетопись</a>
+      </nav>
+    </header>
+
+    <section class="tour-container">
+      <!-- Левая колонка: Кнопки с названиями цехов -->
+      <div class="tour-list">
+        <button class="tour-btn active" data-target="pane1">
+          1. Сварочный цех
+        </button>
+        <button class="tour-btn" data-target="pane2">
+          2. Сборочный конвейер
+        </button>
+        <button class="tour-btn" data-target="pane3">
+          3. Инженерный корпус
+        </button>
+        <button class="tour-btn" data-target="pane4">
+          4. Центральный склад
+        </button>
+        <button class="tour-btn" data-target="pane5">5. Прессовый цех</button>
+        <button class="tour-btn" data-target="pane6">
+          6. Литейное производство
+        </button>
+        <button class="tour-btn" data-target="pane7">7. Цех окраски</button>
+        <button class="tour-btn" data-target="pane8">
+          8. Испытательный полигон
+        </button>
+      </div>
+
+      <!-- Правая колонка: Сами панели с информацией -->
+      <div class="tour-content">
+        <div class="tour-pane active" id="pane1">
+          <h3>1. Сварочный участок</h3>
+          <p>
+            Создание трактора начинается с производства комплектующих. В этом
+            деле задействована вся семья Ростсельмаш. Сотни автоматических
+            манипуляторов и опытные сварщики соединяют рамы и жатки. Каждый шов
+            проверяется на прочность — техника должна выдерживать суровые
+            полевые условия.
+          </p>
+          <img
+            src="static/images/svar.webp"
+            alt="Сварочный участок"
+            class="tour-photo"
+          />
+        </div>
+
+        <div class="tour-pane" id="pane2">
+          <h3>2. Сборочный конвейер</h3>
+          <p>
+            Завод ориентирован на выпуск полного модельного ряда тракторов
+            мощностью от 170 до 600+ лошадиных сил. Здесь из тысяч деталей
+            собирают легендарные TORUM и ACROS. Бригады работают слаженно, как
+            единый механизм. С конвейера машины съезжают полностью готовыми к
+            работе в поле.
+          </p>
+          <img
+            src="static\images\sbor.webp"
+            alt="Cборочный конвейер"
+            class="tour-photo"
+          />
+        </div>
+
+        <div class="tour-pane" id="pane3">
+          <h3>3. Инженерный корпус</h3>
+          <p>
+            Мозг завода. Именно здесь конструкторы разрабатывают новые узлы,
+            проводят испытания и внедряют цифровые технологии точного
+            земледелия. При этом вся история сборки конкретного трактора
+            сохранится в его электронном паспорте.
+          </p>
+          <img
+            src="static\images\enjiner.webp"
+            alt="Инженерный корпус"
+            class="tour-photo"
+          />
+        </div>
+
+        <div class="tour-pane" id="pane4">
+          <h3>4. Центральный склад</h3>
+          <p>
+            Готовые детали отправляются в логистический комплекс. На территории
+            более 15 000 м2 разместились 11-метровые паллетные стеллажи общей
+            емкостью 18 000 ячеек. Благодаря современной автоматизации, нужная
+            деталь для конкретного комбайна находится за считанные минуты.Этого
+            запаса хватает на три недели работы завода.
+          </p>
+          <img
+            src="static\images\sklad.webp"
+            alt="Центральный склад"
+            class="tour-photo"
+          />
+        </div>
+
+        <div class="tour-pane" id="pane5">
+          <h3>5. Прессовый участок</h3>
+          <p>
+            Здесь металл обретает форму. Мощные гидравлические прессы с силой в
+            тысячи тонн штампуют кабины, облицовку и детали кузова.
+            Производственные мощности РПРЗ по лазерному раскрою металла являются
+            крупнейшими в Европе и насчитывают 18 единиц оборудования. Именно
+            здесь рождается узнаваемый агрессивный дизайн современных комбайнов.
+          </p>
+          <img
+            src="static\images\press.jpg"
+            alt="Прессовый участок"
+            class="tour-photo"
+          />
+        </div>
+
+        <div class="tour-pane" id="pane6">
+          <h3>6. Литейное производство</h3>
+          <p>
+            Комплекс высокотехнологичных производств, выпускающих отливки из
+            различных металлов: серого чугуна, стали, цветных металлов. Здесь
+            отливают сложные корпусные детали, шестерни и элементы двигателей.
+            Литейному заводу отводилась важная роль в обеспечении огромного
+            предприятия чугунным и стальным литьем.
+          </p>
+          <img
+            src="static\images\litiy.webp"
+            alt="Литейное производство"
+            class="tour-photo"
+          />
+        </div>
+
+        <div class="tour-pane" id="pane7">
+          <h3>7. Цех окраски</h3>
+          <p>
+            На заводе есть малая и большая линии окраски. Малая линия окраски
+            площадью 1 368 м2, где на детали наносят лакокрасочные покрытия
+            электростатическим пневмораспылением. Большая окрасочная линия имеет
+            площадь уже 7 200 м2. Каждая деталь проходит многоступенчатую
+            очистку и покрывается антикоррозийным составом. Фирменные цвета
+            «Ростсельмаша» наносятся в роботизированных камерах.
+          </p>
+          <img
+            src="static\images\okras.jpg"
+            alt="Цех окраски"
+            class="tour-photo"
+          />
+        </div>
+
+        <div class="tour-pane" id="pane8">
+          <h3>8. Испытательный полигон</h3>
+          <p>
+            Далее машина выезжает на специализированный пробеговый трек, где уже
+            вне производственного корпуса проводятся функциональные и тормозные
+            испытания. На полигоне машины проходят тесты на проходимость,
+            проверку всех систем и имитацию уборки поля. После всех испытаний
+            машину моют, упаковывают и отправляют на отгрузку.
+          </p>
+          <img
+            src="static\images\na-poligone.jpg"
+            alt="Испытательный полигон"
+            class="tour-photo"
+          />
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>© 2026 Цифровой музей «Ростсельмаш»</div>
+      <div>
+        <a href="index.html">Главная</a><a href="archive.html">Фотолетопись</a>
+      </div>
+    </footer>
+
+    <script>
+      const btns = document.querySelectorAll(".tour-btn");
+      const panes = document.querySelectorAll(".tour-pane");
+      btns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          btns.forEach((b) => b.classList.remove("active"));
+          panes.forEach((p) => p.classList.remove("active"));
+          btn.classList.add("active");
+          document.getElementById(btn.dataset.target).classList.add("active");
+        });
+      });
+    document.addEventListener("DOMContentLoaded", function() {
+      
+      // --- 1. ЛОГИКА ДЛЯ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК (ЦЕХОВ) ---
+      const btns = document.querySelectorAll('.tour-btn');
+      const panes = document.querySelectorAll('.tour-pane');
+      
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Убираем активный класс у всех кнопок и панелей
+          btns.forEach(b => b.classList.remove('active'));
+          panes.forEach(p => p.classList.remove('active'));
+          
+          // Добавляем активный класс нажатой кнопке и её панели
+          btn.classList.add('active');
+          document.getElementById(btn.dataset.target).classList.add('active');
+        });
+      });
+
+      // --- 2. ЛОГИКА ДЛЯ ОТКРЫТИЯ ФОТО (ЛАЙТБОКС) ---
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("expandedImg");
+      const closeBtn = document.querySelector(".close-modal");
+      const photos = document.querySelectorAll(".tour-photo");
+
+      // Открытие
+      photos.forEach(photo => {
+        photo.addEventListener("click", function() {
+          modal.style.display = "block";
+          modalImg.src = this.src;
+        });
+      });
+
+      // Закрытие на крестик
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function() {
+          modal.style.display = "none";
+        });
+      }
+
+      // Закрытие на клик по фону
+      if (modal) {
+        modal.addEventListener("click", function(e) {
+          if (e.target === modal) {
+            modal.style.display = "none";
+          }
+        });
+      }
+
+      // Закрытие на Esc
+      document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape" && modal.style.display === "block") {
+          modal.style.display = "none";
+        }
+      });
+
+    });
+  </script>
+    </script>
+    <div id="imageModal" class="modal">
+      <span class="close-modal">&times;</span>
+      <img class="modal-content" id="expandedImg" />
+    </div>
+  </body>
+</html>
